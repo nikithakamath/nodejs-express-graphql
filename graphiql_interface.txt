@@ -1,0 +1,67 @@
+query{
+  getUserProfile(userID: "user_1") {
+    email
+    userName
+    userID
+    books {
+      ...bookFields
+    }
+  }
+  getAllBooks {
+    ...bookFields
+  }
+  getBook(bookID: "book_4") {
+   ...bookFields
+  }
+}
+fragment bookFields on Book {
+  bookID
+  title
+  author
+  year
+}
+
+mutation {
+  createBook(input: {
+    title: "Test",
+    author: "Test author",
+    year: 2010
+  }) {
+    title
+    bookID
+    year
+    author
+  }
+}
+mutation {
+  createUser(input: {
+    userName: "Lucky",
+    email: "lucky@gmail.com"
+  }) {
+    userID
+    userName
+    email
+    books {
+      bookID
+      title
+      author
+      year
+    }
+  }
+}
+mutation {
+  addBookForUser(bookID: "book_3", userID: "user_6") {
+    bookID
+    title
+    author
+    year
+  }
+}
+mutation {
+  removeBookForUser(bookID: "book_2", userID: "user_2") {
+    bookID
+    author
+    title
+    year
+  }
+}
