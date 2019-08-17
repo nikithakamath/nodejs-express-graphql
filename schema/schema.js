@@ -1,14 +1,16 @@
+'use strict';
+
 let {buildSchema} = require('graphql');
 
 const schema = buildSchema(`
     type User {
-        userID: String!
+        _id: ID!,
         userName: String!
         email: String!
         books: [Book]
     }
     type Book {
-        bookID: String!
+        _id: ID!,
         title: String!
         author: String!
         year: Int!
@@ -25,13 +27,13 @@ const schema = buildSchema(`
     type Query {
         getUserProfile(userID: String!): User
         getAllBooks: [Book]
-        getBook(bookID: String!): Book 
+        getBook(bookID: String!): Book
     }
     type Mutation {
         createBook(input: BookInput): Book
         createUser(input: UserInput): User
-        addBookForUser(bookID: String!, userID: String!) : [Book]
-        removeBookForUser(bookID: String!, userID: String!) : [Book]
+        addBookForUser(bookID: String!, userID: String!) : User
+        removeBookForUser(bookID: String!, userID: String!) : User
     }
 `);
 

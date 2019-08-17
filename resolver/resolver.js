@@ -1,59 +1,99 @@
-let {staticData} = require('../model/staticData');
-let userData = staticData.Users;
-let bookData = staticData.Books;
-let userBookData = staticData.UserBooks;
-let _ = require('lodash');
+'use strict';
+
+let User = require('../model/user');
+let Book = require('../model/book');
 
 const resolver = {
     getUserProfile: ({userID}) => {
-        let result = userData.find(user => user.userID === userID);
-        if(result) {
-            result.books = userBookData[userID] ? userBookData[userID] : [];
-        }
-        return result;
+      return new Promise((resolve, reject) => {
+        User.findById(userID).populate('books').exec()
+          .then((userData) => {
+            resolve(userData);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
     },
     getAllBooks: () => {
-        return bookData;
+      return new Promise((resolve, reject) => {
+        Book.find({})
+        .then((bookList) => {
+          resolve(bookList)
+        })
+        .catch((error) => {
+          reject(error);
+        });
+      });
     },
     getBook: ({bookID}) => {
-        return bookData.find(book => book.bookID === bookID);
+      return new Promise((resolve, reject) => {
+        Book.findOne({_id: bookID})
+        .then((book) => {
+          resolve(book);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+      });
     },
     createBook: ({input}) => {
-        let bookObj = {
-            bookID: 'book_' + (bookData.length + 1),
-            title: input.title,
-            author: input.author,
-            year: input.year,
-        };
-        bookData.push(bookObj);
-        return bookObj;
+      return new Promise((resolve, reject) => {
+        let bookObj = new Book({
+          title: input.title,
+          author: input.author,
+          year: input.year,
+        });
+        bookObj.save()
+          .then((savedData) => {
+            resolve(savedData)
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
     },
     createUser: ({input}) => {
-        let userObj = {
-            userID: 'user_' + (userData.length + 1),
-            userName: input.userName,
-            email: input.email,
-        };
-        userData.push(userObj);
-        return userObj;
+      return new Promise((resolve, reject) => {
+        let userObj = new User({
+          userName: input.userName,
+          email: input.email,
+        });
+        userObj.save()
+          .then((savedData) => {
+            resolve(savedData)
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
     },
     addBookForUser: ({bookID, userID}) => {
-        let bookObj = bookData.find(book => book.bookID === bookID);
-        if(userBookData[userID]) {
-            // User already has books
-            userBookData[userID].push(bookObj);
-        } else {
-            // User does not have books
-            userBookData[userID] = [bookObj];
-        }
-        return userBookData[userID];
+      return new Promise((resolve, reject) => {
+        let bookData;
+        Book.findOne({_id: bookID})
+          .then((book) => {
+            bookData = book;
+            return User.findOneAndUpdate({_id: userID}, {$push: {books: bookData}}, {new: true});
+          })
+          .then((updateData) => {
+            resolve(updateData);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
     },
     removeBookForUser: ({bookID, userID}) => {
-        let userBookList = userBookData[userID];
-        _.remove(userBookList, (userBook) => {
-            return userBook.bookID === bookID;
-        });
-        return userBookList;
+      return new Promise((resolve, reject) => {
+        User.findOneAndUpdate({_id: userID}, {$pull: {books: bookID}}, {new: true})
+          .then((updateData) => {
+            resolve(updateData);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
     }
 };
 

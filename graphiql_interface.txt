@@ -1,8 +1,8 @@
 query{
-  getUserProfile(userID: "user_1") {
+  getUserProfile(userID: "5d57f6ba889d9d301c2a6c2f") {
+    _id
     email
     userName
-    userID
     books {
       ...bookFields
     }
@@ -10,12 +10,12 @@ query{
   getAllBooks {
     ...bookFields
   }
-  getBook(bookID: "book_4") {
+  getBook(bookID: "5d57f67d889d9d301c2a6c2e") {
    ...bookFields
   }
 }
 fragment bookFields on Book {
-  bookID
+  _id
   title
   author
   year
@@ -27,22 +27,21 @@ mutation {
     author: "Test author",
     year: 2010
   }) {
+    _id
     title
-    bookID
     year
     author
   }
 }
 mutation {
   createUser(input: {
-    userName: "Lucky",
-    email: "lucky@gmail.com"
+    userName: "Seeta",
+    email: "seeta@gmail.com"
   }) {
-    userID
+    _id
     userName
     email
     books {
-      bookID
       title
       author
       year
@@ -50,18 +49,22 @@ mutation {
   }
 }
 mutation {
-  addBookForUser(bookID: "book_3", userID: "user_6") {
-    bookID
-    title
-    author
-    year
+  addBookForUser(bookID: "5d57e8325305143f24d06030", userID: "5d57e86f5305143f24d06031") {
+    _id
+    userName
+    email
+    books {
+      _id
+    }
   }
 }
 mutation {
-  removeBookForUser(bookID: "book_2", userID: "user_2") {
-    bookID
-    author
-    title
-    year
+  removeBookForUser(bookID: "5d57e81b5305143f24d0602e", userID: "5d57e86f5305143f24d06031") {
+    _id
+    userName
+    email
+    books {
+      _id
+    }
   }
 }
