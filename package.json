@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nikithakamath/graphql-express-application.git"
+    "url": "git+https://github.com/nikithakamath/nodejs-express-graphql.git"
   },
   "author": "Nikitha Kamath",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nikithakamath/graphql-express-application/issues"
+    "url": "https://github.com/nikithakamath/nodejs-express-graphql/issues"
   },
-  "homepage": "https://github.com/nikithakamath/graphql-express-application#readme",
+  "homepage": "https://github.com/nikithakamath/nodejs-express-graphql#readme",
   "dependencies": {
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
